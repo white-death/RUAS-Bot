@@ -7,7 +7,7 @@ A python Bot for attending online classes.
 There are few things you need to configure before running this bot.
 
  - Open Microsoft teams on your browser, login to your account, change the dashboard view to list view (from grid view), so that your classes are displayed in a list view. 
- - ![This is how list view looks like](https://i.imgur.com/SSDo8c6.png)
+  ![This is how list view looks like](https://i.imgur.com/SSDo8c6.png)
  - Open *bot.py*, and put your microsoft teams credentials in the **CREDS** dictionary. 
  - Example - `CREDS  = {'email' : 'myemail@email.com', 'passwd':'''mypassword'''}`
  - Open *discord_webhook.py* and put your discord webhook URL in the **webhook_url** variable. 
