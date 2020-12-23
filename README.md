@@ -12,6 +12,10 @@ There are few things you need to configure before running this bot.
  - Example - `CREDS  = {'email' : 'myemail@email.com', 'passwd':'''mypassword'''}`
  - Open *discord_webhook.py* and put your discord webhook URL in the **webhook_url** variable. 
  - Example - `webhook_url = "https://discordapp.com/...."`
+ - Open *info.py*, and put your class timetable accordingly.
+ - Example - `class_url = "https://microsoft.com/xxxxxx...."`
+ - Example - `CSx = (HH:MM) / CEx = (HH:MM)`
+ - Modify the variable names as required.
  - Make sure that the timezone of the PC is correct. If you're running the bot on cloud, you may want to manually change the timezone of the virtual machine to an appropriate time zone (i.e., the timezone that your online classes follow)
 
 ## Install
