@@ -3,7 +3,7 @@ from discord_webhooks import DiscordWebhooks
 
 #Put your discord webhook url here.
 
-webhook_url = 'https://discord.com/api/webhooks/786740892102950964/1w8a3J37g2Xpb2dGHcto9q6AU5c71XuCoBCtGsBIw3zuFefuAWKsNoipmC0AGEAop03N'
+webhook_url = ''
 
 
 def send_msg(class_name,status,current_time,start_time,end_time):
@@ -12,7 +12,7 @@ def send_msg(class_name,status,current_time,start_time,end_time):
 
     webhook = DiscordWebhooks(WEBHOOK_URL)
     # Attaches a footer
-    webhook.set_footer(text='~~ BOT-54NDY')
+    webhook.set_footer(text='')
 
     if(status=="joined"):
 
