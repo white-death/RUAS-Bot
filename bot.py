@@ -31,7 +31,6 @@ opt.add_experimental_option("prefs", { \
     "profile.default_content_setting_values.notifications": 1 
   })
 
-# driver = webdriver.Chrome(chrome_options=opt,service_log_path='NUL')
 driver = None
 #URL = "https://teams.microsoft.com"
 
@@ -124,7 +123,7 @@ def joinclass(class_name,start_time,end_time,link):
 			#refresh every minute until found
 			while True:
 				print("Join button not found, trying again")
-				print("Attempts left {} ".format(atmpt))
+				print("Time left {} minutes...".format(int(atmpt)))
 				time.sleep(60)
 				driver.refresh()
 				joinclass(class_name,start_time,end_time,link)
