@@ -31,6 +31,7 @@ opt.add_experimental_option("prefs", { \
     "profile.default_content_setting_values.notifications": 1 
   })
 
+# driver = webdriver.Chrome(chrome_options=opt,service_log_path='NUL')
 driver = None
 #URL = "https://teams.microsoft.com"
 
@@ -63,16 +64,16 @@ def joinclass(class_name,start_time,end_time,link):
 
 	now = datetime.datetime.now()
 	current_time = now.strftime("%H:%M")	
-
-	WebDriverWait(driver,10000).until(EC.visibility_of_element_located((By.TAG_NAME,'body')))
 	
+	WebDriverWait(driver,10000).until(EC.visibility_of_element_located((By.TAG_NAME,'body')))
+		
 
 	class_running_time = datetime.datetime.strptime(end_time,"%H:%M") - datetime.datetime.strptime(current_time,"%H:%M")
 
 
 	try:
 		print("Fetching join button")
-		time.sleep(5)
+		time.sleep(10)
 
 		joinbtn = driver.find_element_by_class_name("ts-calling-join-button")
 		joinbtn.click()
@@ -94,46 +95,56 @@ def joinclass(class_name,start_time,end_time,link):
 		joinnowbtn.click()
 
 		discord_webhook.send_msg(class_name=class_name,status="joined",current_time=current_time,start_time=start_time,end_time=end_time)
-	
-		#now schedule leaving class
-		
-		print("Waiting Time : {}".format(class_running_time))
-		time.sleep(class_running_time.seconds)
 
-		driver.find_element_by_class_name("ts-calling-screen").click()
-
-
-		driver.find_element_by_xpath('//*[@id="teams-app-bar"]/ul/li[3]').click() #come back to homepage
-		time.sleep(1)
-
-		driver.find_element_by_xpath('//*[@id="hangup-button"]').click()
-		print("Class left")
-		discord_webhook.send_msg(class_name=class_name,status="left",current_time=current_time,start_time=start_time,end_time=end_time)
 
 	except:
 
 		now2 = datetime.datetime.now()
 		current_time2 = now2.strftime("%H:%M")
+		class_running_time2 = datetime.datetime.strptime(end_time,"%H:%M") - datetime.datetime.strptime(current_time2,"%H:%M")
+		atmpt = ((class_running_time2.seconds/60) - 10)
 
-		atmpt = ((class_running_time.seconds/60) - 7)
-
-		if current_time2 < end_time:
+		if atmpt >= 1:
 
 			#join button not found
 			#refresh every minute until found
-			while True:
-				print("Join button not found, trying again")
-				print("Time left {} minutes...".format(int(atmpt)))
-				time.sleep(60)
-				driver.refresh()
-				joinclass(class_name,start_time,end_time,link)
+			print("Join button not found, trying again")
+			print("Time left {} minutes...".format(int(atmpt)))
+			time.sleep(60)
+			driver.refresh()
+			joinclass(class_name,start_time,end_time,link)
 
+		else:
 			print("Seems like there is no class today.")
 			discord_webhook.send_msg(class_name=class_name,status="noclass",current_time=current_time2,start_time=start_time,end_time=end_time)
 
 
-	print("Schedule Ended!")
-	driver.quit()
+	else:
+
+		#now schedule leaving class
+
+		try:
+			print("Waiting Time : {}".format(class_running_time))
+			time.sleep(class_running_time.seconds)
+
+			driver.find_element_by_class_name("ts-calling-screen").click()
+
+			driver.find_element_by_xpath('//*[@id="teams-app-bar"]/ul/li[3]').click() #come back to homepage
+			time.sleep(1)
+
+			driver.find_element_by_xpath('//*[@id="hangup-button"]').click()
+			print("Class left")
+
+		except:
+			print("Professor left the class early!")
+
+		finally:
+			discord_webhook.send_msg(class_name=class_name,status="left",current_time=current_time,start_time=start_time,end_time=end_time)
+
+
+	finally:
+		print("Schedule Ended!")
+		driver.quit()
 
 
 def browser(class_name,start_time,end_time,link):
@@ -160,7 +171,7 @@ def browser(class_name,start_time,end_time,link):
 
 
 def monday():
-    schedule.every().monday.at(CS1).do(browser,ci,CS1,CS2,monCI)
+    schedule.every().monday.at(CS1).do(browser,ci,CS1,CE2,monCI)
     schedule.every().monday.at(CS3).do(browser,cv,CS3,CE3,monCV)
     schedule.every().monday.at(CS4).do(browser,dm,CS4,CE5,monDM)
     schedule.every().monday.at(CS6).do(browser,cv,CS6,CE8,monCV2)
@@ -183,7 +194,7 @@ def tuesday():
     	time.sleep(1)#seconds (tuesday)
 
 def wednesday():
-    schedule.every().wednesday.at(CS1).do(browser,cv,CS1,CE1,wedCV)
+    schedule.every().wednesday.at(CS1).do(browser,cv,CS1,CE2,wedCV)
     #schedule.every().wednesday.at(CS2).do(browser,wa,CS2,CE2,wedWA)
     schedule.every().wednesday.at(CS3).do(browser,dm,CS3,CE4,wedDM)
     schedule.every().wednesday.at(CS5).do(browser,ci,CS5,CE5,wedCI)
@@ -218,6 +229,7 @@ def saturday():
 def sunday():
 	discord_webhook.send_msg(class_name="No class scheduled today",status="sunday",current_time="00:00",start_time="00:00",end_time="23:59")
 	
+
 
 if __name__=="__main__":
 	#select day...
